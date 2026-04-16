@@ -20,6 +20,7 @@ import z from 'zod';
 const WIDGET_URI = 'ui://flashcards-widget';
 
 const cardSchema = z.object({
+	id: z.string().readonly(),
 	front: z.string().describe('The question or prompt'),
 	back: z.string().describe('The answer'),
 	hint: z.string().describe('A hint for the card'),
@@ -91,8 +92,8 @@ export default {
 			},
 			async ({ deck: { title, description, cards }, username }) => {
 				const cardsWithIds = cards.map((card, index) => ({
-					id: `card=${Date.now()}-${index}`,
 					...card,
+					id: `card=${Date.now()}-${index}`,
 					status: 'new',
 				}));
 				const deck = {
@@ -238,8 +239,118 @@ export default {
 		);
 
 		// mark card (private)
+		registerAppTool(
+			server,
+			'mark-card',
+			{
+				title: 'Mark Card',
+				description: `This is to change the status of a card`,
+				inputSchema: {
+					username: z.string(),
+					deckId: z.string(),
+					status: z.enum(['learning', 'mastered']),
+					cardId: z.string(),
+				},
+				annotations: {
+					readOnlyHint: false,
+				},
+				_meta: {
+					ui: {
+						visibility: ['app'],
+					},
+				},
+			},
+			async ({ username, deckId, cardId, status }) => {
+				const deckKey = `user:${username}:deck:${deckId}`;
+
+				const deck = await env.FLASHCARDS_KV.get<Deck>(deckKey, 'json');
+
+				if (!deck) {
+					return {
+						content: [
+							{
+								text: 'Error not found',
+								type: 'text',
+							},
+						],
+						isError: true,
+					};
+				}
+
+				const card = deck.cards.find((card) => card.id === cardId);
+
+				if (card) {
+					card.status = status;
+				}
+
+				await env.FLASHCARDS_KV.put(deckId, JSON.stringify(deck));
+
+				return {
+					content: [
+						{
+							type: 'text',
+							text: `Card ${cardId} has been updated to ${status} status`,
+						},
+					],
+					structuredContent: { deck },
+				};
+			},
+		);
 
 		// reset deck (private)
+
+		registerAppTool(
+			server,
+			'reset-deck',
+			{
+				title: 'Reset Deck',
+				description: `This is to reset profress of the deck.`,
+				inputSchema: {
+					username: z.string(),
+					deckId: z.string(),
+				},
+				annotations: {
+					destructiveHint: true,
+				},
+				_meta: {
+					ui: {
+						visibility: ['app'],
+					},
+				},
+			},
+			async ({ username, deckId }) => {
+				const deckKey = `user:${username}:deck:${deckId}`;
+
+				const deck = await env.FLASHCARDS_KV.get<Deck>(deckKey, 'json');
+
+				if (!deck) {
+					return {
+						content: [
+							{
+								text: 'Error not found',
+								type: 'text',
+							},
+						],
+						isError: true,
+					};
+				}
+				for (const card of deck.cards) {
+					card.status = 'new';
+				}
+
+				await env.FLASHCARDS_KV.put(deckId, JSON.stringify(deck));
+
+				return {
+					content: [
+						{
+							type: 'text',
+							text: `Deck progress has been reset`,
+						},
+					],
+					structuredContent: { deck },
+				};
+			},
+		);
 
 		// delete deck
 
