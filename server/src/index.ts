@@ -255,7 +255,7 @@ export default {
 					deckId: z.string().describe('The Id of the deck to delete. You can get it using the `list-decks` tool '),
 				},
 				annotations: {
-					readOnlyHint: true,
+					destructiveHint: true,
 				},
 				_meta: {},
 			},
