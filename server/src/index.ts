@@ -229,7 +229,7 @@ export default {
 					content: [
 						{
 							type: 'text',
-							text: `Studying ${deck.title} with ${deck.description} opened. ${deck.cards}`,
+							text: `Studying ${deck.title} with ${deck.description} opened. ${JSON.stringify(deck.cards)}`,
 						},
 					],
 					structuredContent: { deck, username, deckId },
