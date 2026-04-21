@@ -2,6 +2,9 @@
 @import "@openai/apps-sdk-ui/css";
 
 @source "../node_modules/@openai/apps-sdk-ui";
+/* Local app + Ladle: ensure Tailwind sees class names when the Vite entry graph differs (e.g. ladle serve). */
+@source "../src";
+@source "../.ladle";
 
 .flashcard-container {
   perspective: 1000px;
