@@ -83,6 +83,7 @@ export function WorkoutSession({
     setCurrentExerciseIndex((i) => (i + 1) % workout.exercises.length);
     setTimeRemaining(workout.intervalSeconds);
     if (!app) return;
+
     await app.updateModelContext({
       content: [
         {
