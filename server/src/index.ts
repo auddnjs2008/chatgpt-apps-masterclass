@@ -7,8 +7,13 @@ import { handleAuthorizeGet, handleAuthorizePost } from './lib/authorize';
 
 const WIDGET_URI = 'ui://ecommerce-widget';
 
+type AuthProps = {
+	email: string;
+};
+
 const privateHandler = {
 	async fetch(request, env, ctx) {
+		const props = ctx.props as AuthProps;
 		const server = new McpServer({
 			name: 'Ecommerce App',
 			version: '1.0',
@@ -57,6 +62,21 @@ const privateHandler = {
 			async ({ query, category }) => {
 				return {
 					content: [{ type: 'text', text: 'Not implemented' }],
+				};
+			},
+		);
+
+		server.registerTool(
+			'whoami',
+			{
+				title: 'whoami',
+				description: 'tell the user who they are logged in as.',
+				inputSchema: {},
+				annotations: { readOnlyHint: true },
+			},
+			async () => {
+				return {
+					content: [{ type: 'text', text: `You are logged in as ${JSON.stringify(props)}` }],
 				};
 			},
 		);
