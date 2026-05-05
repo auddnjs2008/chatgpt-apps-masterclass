@@ -60,6 +60,13 @@ export default function App() {
     capabilities: {},
     onAppCreated: (app) => {
       app.ontoolresult = handleToolResult;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if ((window as any).openai.toolOutput) {
+        handleToolResult({
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          structuredContent: (window as any).openai.toolOutpu,
+        });
+      }
     },
   });
 
