@@ -163,7 +163,7 @@ const privateHandler = {
 				},
 			},
 			async ({ productId, quantity }) => {
-				await modifyCard(env.DB, productId, props.email, quantity);
+				await modifyCard(env.DB, props.email, productId, quantity);
 				const cartProducts = await getCartProducts(env.DB, props.email);
 				return {
 					content: [{ type: 'text', text: `Added ${quantity} items to cart. Cart is now ${cartProducts}` }],
