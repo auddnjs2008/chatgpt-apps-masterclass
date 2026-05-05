@@ -81,20 +81,20 @@ export default function App() {
     }
   }, [app]);
 
-  useEffect(() => {
-    if (!app) return;
-    const fetchCart = async () => {
-      const result = await app.callServerTool({
-        name: "view-cart",
-        arguments: {},
-      });
-      if (!result.isError) {
-        setCart(result.structuredContent?.cartItems as CartItem[]);
-      }
-    };
+  // useEffect(() => {
+  //   if (!app) return;
+  //   const fetchCart = async () => {
+  //     const result = await app.callServerTool({
+  //       name: "view-cart",
+  //       arguments: {},
+  //     });
+  //     if (!result.isError) {
+  //       setCart(result.structuredContent?.cartItems as CartItem[]);
+  //     }
+  //   };
 
-    setTimeout(() => fetchCart(), 0);
-  }, [app]);
+  //   setTimeout(() => fetchCart(), 0);
+  // }, [app]);
 
   if (!isConnected) {
     return (
