@@ -64,7 +64,7 @@ export default function App() {
       if ((window as any).openai.toolOutput) {
         handleToolResult({
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          structuredContent: (window as any).openai.toolOutpu,
+          structuredContent: (window as any).openai.toolOutput,
         });
       }
     },
