@@ -93,7 +93,7 @@ export default function App() {
       }
     };
 
-    fetchCart();
+    setTimeout(() => fetchCart(), 0);
   }, [app]);
 
   if (!isConnected) {

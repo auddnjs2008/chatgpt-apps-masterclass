@@ -103,6 +103,7 @@ const privateHandler = {
 				annotations: { readOnlyHint: true },
 				_meta: {
 					ui: { resourceUri: WIDGET_URI },
+					'ui/resourceUri': WIDGET_URI,
 				},
 			},
 			async ({ query, category }) => {
@@ -129,6 +130,7 @@ const privateHandler = {
 				annotations: { readOnlyHint: true },
 				_meta: {
 					ui: { resourceUri: WIDGET_URI },
+					'ui/resourceUri': WIDGET_URI,
 				},
 			},
 			async ({ productId }) => {
@@ -160,6 +162,7 @@ const privateHandler = {
 				},
 				_meta: {
 					ui: { visibility: ['model', 'app'] },
+					'ui/resourceUri': WIDGET_URI,
 				},
 			},
 			async ({ productId, quantity }) => {
@@ -185,6 +188,7 @@ const privateHandler = {
 					ui: {
 						resourceUri: WIDGET_URI,
 						visibility: ['model', 'app'],
+						'ui/resourceUri': WIDGET_URI,
 					},
 				},
 			},
