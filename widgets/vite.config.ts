@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 
-const FULL_URL = "https://workouts-server.auddnjs2008.workers.dev";
+const FULL_URL = "https://ecommerce-server.auddnjs2008.workers.dev";
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
