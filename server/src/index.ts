@@ -194,7 +194,7 @@ const privateHandler = {
 
 				return {
 					content: [{ type: 'text', text: `Cart has Items ${cartProducts} a total of: ${subtotal}` }],
-					structuredContent: { cartItems, subtotal },
+					structuredContent: { cartItems: cartProducts, subtotal },
 				};
 			},
 		);
