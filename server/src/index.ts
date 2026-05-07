@@ -323,7 +323,7 @@ const publicHandler = {
 		const url = new URL(request.url);
 
 		if (url.pathname.startsWith('/banana')) {
-			const key = url.pathname.replaceAll('banana/', '');
+			const key = url.pathname.replaceAll('/banana/', '');
 			const object = await env.BUCKET.get(key);
 			if (!object) {
 				return new Response('image not found', { status: 404 });
