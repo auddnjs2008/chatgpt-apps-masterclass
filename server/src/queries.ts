@@ -79,3 +79,22 @@ export async function clearCart(d1: D1Database, userId: string) {
 	const db = getDb(d1);
 	await db.delete(cartItems).where(eq(cartItems.userId, userId));
 }
+
+export async function upsertReview(d1: D1Database, userId: string, productId: string, rating: number, text: string, fileId?: string) {
+	const db = getDb(d1);
+
+	const existing = await db
+		.select()
+		.from(reviews)
+		.where(and(eq(reviews.productId, productId), eq(reviews.userId, userId)))
+		.get();
+
+	if (existing) {
+		await db
+			.update(reviews)
+			.set({ rating, text, fileId })
+			.where(and(eq(reviews.productId, productId), eq(reviews.userId, userId)));
+	} else {
+		await db.insert(reviews).values({ rating, text, fileId: fileId ?? '', userId, productId });
+	}
+}
