@@ -2,7 +2,13 @@ import type { Review } from "../types";
 import { StarRating } from "./StarRating";
 
 function timeAgo(timestamp: number): string {
+  if (!Number.isFinite(timestamp)) {
+    return "just now";
+  }
   const days = Math.round((timestamp * 1000 - Date.now()) / 86400000);
+  if (!Number.isFinite(days)) {
+    return "just now";
+  }
   return new Intl.RelativeTimeFormat("en", { numeric: "auto" }).format(
     days,
     "day"

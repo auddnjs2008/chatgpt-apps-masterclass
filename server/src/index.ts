@@ -16,6 +16,27 @@ type AuthProps = {
 	email: string;
 };
 
+function toEpochSeconds(value: unknown): number {
+	if (typeof value === 'number' && Number.isFinite(value)) {
+		// Accept both seconds and milliseconds.
+		return value > 1_000_000_000_000 ? Math.floor(value / 1000) : Math.floor(value);
+	}
+	if (value instanceof Date) {
+		return Math.floor(value.getTime() / 1000);
+	}
+	if (typeof value === 'string') {
+		const parsedNumber = Number(value);
+		if (Number.isFinite(parsedNumber)) {
+			return parsedNumber > 1_000_000_000_000 ? Math.floor(parsedNumber / 1000) : Math.floor(parsedNumber);
+		}
+		const parsedDate = new Date(value);
+		if (!Number.isNaN(parsedDate.getTime())) {
+			return Math.floor(parsedDate.getTime() / 1000);
+		}
+	}
+	return Math.floor(Date.now() / 1000);
+}
+
 const privateHandler = {
 	async fetch(request, env, ctx) {
 		const props = ctx.props as AuthProps;
@@ -142,10 +163,14 @@ const privateHandler = {
 					};
 				}
 				const productReviews = await getReviewsByProductId(env.DB, productId);
+				const normalizedReviews = productReviews.map((review) => ({
+					...review,
+					createdAt: toEpochSeconds(review.createdAt),
+				}));
 
 				return {
-					content: [{ type: 'text', text: `Product Details: ${JSON.stringify(product)} showing ${productReviews.length}` }],
-					structuredContent: { product, reviews: productReviews },
+					content: [{ type: 'text', text: `Product Details: ${JSON.stringify(product)} showing ${normalizedReviews.length}` }],
+					structuredContent: { product, reviews: normalizedReviews },
 				};
 			},
 		);
@@ -269,10 +294,14 @@ const privateHandler = {
 				await upsertReview(env.DB, props.email, productId, rating, text, imageKey);
 
 				const freshReviews = await getReviewsByProductId(env.DB, productId);
+				const normalizedReviews = freshReviews.map((review) => ({
+					...review,
+					createdAt: toEpochSeconds(review.createdAt),
+				}));
 				return {
-					content: [{ type: 'text', text: `Review submitted. Total reviews ${freshReviews.length}` }],
+					content: [{ type: 'text', text: `Review submitted. Total reviews ${normalizedReviews.length}` }],
 					structuredContent: {
-						reviews: freshReviews,
+						reviews: normalizedReviews,
 					},
 				};
 			},
