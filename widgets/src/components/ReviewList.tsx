@@ -44,6 +44,12 @@ export function ReviewList({ reviews }: Props) {
               {review.text}
             </p>
           )}
+          {review.fileId !== "" && (
+            <img
+              src={`https://ecommerce-server.auddnjs2008.workers.dev/banana/${review.fileId}`}
+              className="size-16 object-cover rounded-lg mt-2"
+            />
+          )}
         </div>
       ))}
     </div>
